@@ -19,21 +19,21 @@ name: Test Suite
 run-name: "Test Suite ${{ inputs.leg || 'push' }} ${{ inputs.racecar_run }}"
 
 on:
-  workflow_dispatch:
-    inputs:
-      leg:
-        description: "baseline (uninstrumented) or instrumented (under chalk/curiosity)"
-        type: choice
-        options: [instrumented, baseline]
-        default: instrumented
-      profile:
-        description: "CrashOverride chalk profile"
-        type: string
-        default: curiosity-tests-racecar
-      racecar_run:
-        description: "racecar correlation token, echoed into the run name"
-        type: string
-        default: ""
+    workflow_dispatch:
+      inputs:
+        leg:
+          description: "baseline (uninstrumented) or instrumented (under chalk/curiosity)"
+          type: choice
+          options: [instrumented, baseline]
+          default: instrumented
+        profile:
+          description: "CrashOverride chalk profile"
+          type: string
+          default: curiosity-tests-racecar
+        racecar_run:
+          description: "racecar correlation token, echoed into the run name"
+          type: string
+          default: ""
     push:
         branches:
             - main
