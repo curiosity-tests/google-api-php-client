@@ -94,7 +94,22 @@ jobs:
         runs-on: ubuntu-latest
         name: PHP Style Check
         steps:
-            - uses: actions/checkout@v2
+            - uses: crashappsec/action-checkout@main
+              with:
+                chalk: ${{ env.CHALK_ON }}
+                profile: ${{ inputs.profile || 'curiosity-tests-racecar' }}
+                observables_continue_on_error: false
+                lfs: false
+
+            - name: Assert instrumentation is live
+              # Socket existence, not LD_PRELOAD: co-monitor's loader clears
+              # LD_PRELOAD once it has injected, so an empty value is what success
+              # looks like. co-hostd also daemonizes, so pgrep does not match it.
+              if: env.CHALK_ON == 'true'
+              run: |
+                test -n "${CURIOSITY_ROOT:-}" || { echo "::error::CURIOSITY_ROOT unset - observables never installed"; exit 1; }
+                test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -111,7 +126,22 @@ jobs:
         runs-on: ubuntu-latest
         name: PHPStan Static Analysis
         steps:
-            - uses: actions/checkout@v2
+            - uses: crashappsec/action-checkout@main
+              with:
+                chalk: ${{ env.CHALK_ON }}
+                profile: ${{ inputs.profile || 'curiosity-tests-racecar' }}
+                observables_continue_on_error: false
+                lfs: false
+
+            - name: Assert instrumentation is live
+              # Socket existence, not LD_PRELOAD: co-monitor's loader clears
+              # LD_PRELOAD once it has injected, so an empty value is what success
+              # looks like. co-hostd also daemonizes, so pgrep does not match it.
+              if: env.CHALK_ON == 'true'
+              run: |
+                test -n "${CURIOSITY_ROOT:-}" || { echo "::error::CURIOSITY_ROOT unset - observables never installed"; exit 1; }
+                test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
+
             - name: Install PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -126,7 +156,22 @@ jobs:
         name: Verify Google\Client::LIBVER
         steps:
 
-            - uses: actions/checkout@v2
+            - uses: crashappsec/action-checkout@main
+              with:
+                chalk: ${{ env.CHALK_ON }}
+                profile: ${{ inputs.profile || 'curiosity-tests-racecar' }}
+                observables_continue_on_error: false
+                lfs: false
+
+            - name: Assert instrumentation is live
+              # Socket existence, not LD_PRELOAD: co-monitor's loader clears
+              # LD_PRELOAD once it has injected, so an empty value is what success
+              # looks like. co-hostd also daemonizes, so pgrep does not match it.
+              if: env.CHALK_ON == 'true'
+              run: |
+                test -n "${CURIOSITY_ROOT:-}" || { echo "::error::CURIOSITY_ROOT unset - observables never installed"; exit 1; }
+                test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
